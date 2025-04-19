@@ -63,13 +63,37 @@
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     
     <!-- Particles.js Configuration -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            particlesJS.load('particles-js', 'particlesjs-config.json', function() {
-                console.log('Particles.js loaded successfully');
-            });
+    <!-- Particles.js Configuration with Error Handling -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // 1. First check if particlesJS exists
+    if (typeof particlesJS !== 'function') {
+      console.error('Particles.js library not loaded!');
+      return;
+    }
+
+    // 2. Load configuration with fallback
+    fetch('particlesjs-config.json')
+      .then(response => {
+        if (!response.ok) throw new Error('Config file not found');
+        return response.json();
+      })
+      .then(config => {
+        particlesJS('particles-js', config);
+        console.log('Particles initialized successfully');
+      })
+      .catch(error => {
+        console.error('Particles.js error:', error.message);
+        // Fallback to minimal config if file missing
+        particlesJS('particles-js', {
+          particles: {
+            number: { value: 50 },
+            size: { value: 3 }
+          }
         });
-    </script>
+      });
+  });
+</script>
     
     <script src="main.js"></script>
 </body>
